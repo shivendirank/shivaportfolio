@@ -59,7 +59,7 @@ function TextSection({ section }: { section: OverlaySection }) {
     // Actually we use a MotionValue transformer that reads window.innerHeight dynamically.
 
     const progress = useTransform(scrollY, (v) => {
-        const maxScroll = (window.innerHeight * 700) / 100
+        const maxScroll = typeof window !== 'undefined' ? (window.innerHeight * 700) / 100 : 7000
         return Math.min(Math.max(v / maxScroll, 0), 1)
     })
 
@@ -160,6 +160,7 @@ export default function Overlay() {
 
     // Hide overlay once past hero section
     const overlayOpacity = useTransform(scrollY, (v) => {
+        if (typeof window === 'undefined') return 1;
         const heroEnd = (window.innerHeight * 800) / 100  // 800vh in px
         const fadeStart = heroEnd - window.innerHeight * 0.5  // start fading 0.5 screen before end
         return Math.min(Math.max(1 - (v - fadeStart) / (window.innerHeight * 0.5), 0), 1)
